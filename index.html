@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJlc0f0dc03d9cc82af40659145725bad0f"/>
+<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl4b26190e4e243f99f67186c195d3bc1c"/>
   <meta charset="utf-8">
   <meta name="generator" content="Google Web Designer 16.2.0.0128">
   <meta name="template" content="Banner 3.0.0">
@@ -365,6 +365,7 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
               const storeLon = parseFloat(row[3]);
 
               const distance = getDistanceFromLatLonInKm(currentLat, currentLon, storeLat, storeLon);
+              console.log("Distance Calculated: " +distance);
 
               // Find the store with the shortest distance
               if (distance < minDistance) {
