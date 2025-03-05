@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJleba13839cebfb45806d0ab34f170f5b7"/>
+<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl68900ae6df0251f8f905e1c1687ce867"/>
   <meta charset="utf-8">
   <meta name="generator" content="Google Web Designer 16.2.0.0128">
   <meta name="template" content="Banner 3.0.0">
@@ -238,43 +238,10 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
 
         var vioohAssetId = qs["viooh_asset_id"];
 
-
-        /*   // Extract bid request data from query string
-        var bidRequestJson = qs["bid_request"];
-        var bidRequest = {};
-
-      console.log("Bidrequest Data: " + bidRequestJson);
-
-        if (bidRequestJson) {
-          try {
-            bidRequest = JSON.parse(bidRequestJson);
-          } catch (e) {
-            console.error("Error parsing bid request JSON", e);
-          }
-        }
-
-        // Extract location data from bid request
-        //var latitude = bidRequest.location ? bidRequest.location.latitude : null;
-        //var longitude = bidRequest.location ? bidRequest.location.longitude : null;
-        var latitude = bidRequest.device && bidRequest.device.geo ? bidRequest.device.geo.lat : null;
-        var longitude = bidRequest.device && bidRequest.device.geo ? bidRequest.device.geo.lon : null;*/
-
         // Display the extracted information
         var infoElement = document.getElementById('info');
         infoElement.innerHTML =
           '<p>Asset ID: ' + vioohAssetId + '</p>';
-
-        /*  // Store the location data
-          var locationElement = document.getElementById('location');
-          if (latitude && longitude) {
-            userLatitude = latitude;
-            userLongitude = longitude;
-            locationElement.innerHTML =
-              '<p>Latitude: ' + latitude + '</p>' +
-              '<p>Longitude: ' + longitude + '</p>';
-          } else {
-            locationElement.innerHTML = '<p>Location data not available.</p>';
-          } */
 
         async function getLatLonByFrameID(frameID) {
           const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSRKqVv_iaQarH-ZEfY6o_mAyX-vRK2sq1Xc0wtcJy-OGg_EhzMjdk4qil6TG4MRU98IPfzreaSqAOC/pubhtml?gid=1892651405&single=true';
@@ -339,12 +306,6 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
           }
         });
 
-
-
-
-
-
-
         function fetchLocation() {
           console.log("Fetch Location called");
           if (userLatitude && userLongitude) {
@@ -353,11 +314,11 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
             let nearestStore = null;
             let minDistance = Infinity;
             let data = {
-              values: [
-                ["Blis, Spaces", "125 Deansgate, Manchester, M3 2BY", 53.4802161, -2.250911],
-                ["The Shard, Blis, Level 15,", "32 London Bridge St, London SE1 9SG", 51.5041644, -0.0880321],
-              ]
-            };
+                values: [
+                  ["Blis, Spaces", "125 Deansgate, Manchester, M3 2BY", 53.4802161, -2.250911],
+                  ["The Shard, Blis, Level 15,", "32 London Bridge St, London SE1 9SG", 51.5041644, -0.0880321],
+                ]
+              };
             data.values.forEach(function(row) {
               const storeName = row[0];
               const storeAdd = row[1];
@@ -377,16 +338,17 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
                   lon: storeLon
                 };
               }
-               });
-              console.log(nearestStore);
+            });
+              
+            console.log(nearestStore);
 
-              if (nearestStore) {
-                console.log('Nearest Store:', nearestStore.name);
-                console.log('Distance:', minDistance.toFixed(2), 'km');
-                nearbyHeadlineTxt.textContent = 'Nearby office: (' + minDistance.toFixed(2) + ' km away.)';
-                StoreNameTxt.textContent = nearestStore.name;
-                storeAddressTxt.textContent = nearestStore.add;
-                // Display or further process the nearest store information as needed
+            if (nearestStore) {
+              console.log('Nearest Store:', nearestStore.name);
+              console.log('Distance:', minDistance.toFixed(2), 'km');
+              nearbyHeadlineTxt.textContent = 'Nearby office: (' + minDistance.toFixed(2) + ' km away.)';
+              StoreNameTxt.textContent = nearestStore.name;
+              storeAddressTxt.textContent = nearestStore.add;
+              // Display or further process the nearest store information as needed
 
               }
                 }
