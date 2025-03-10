@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl733c06d1f247a762afc7da635a4b0624"/>
+<html><head><meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJl077f9a5058569939938f2cfbfc599030"/>
   <meta charset="utf-8">
   <meta name="generator" content="Google Web Designer 16.2.0.0128">
   <meta name="template" content="Banner 3.0.0">
@@ -229,11 +229,11 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
 
         var qs = getQueryStringParams();
         var vioohAssetId = qs["viooh_asset_id"];
-        //vioohAssetId = '1235192397';
+       //vioohAssetId = '1235192397';
         var infoElement = document.getElementById('info');
         infoElement.innerHTML = '<p>Asset ID: ' + vioohAssetId + '</p>';
 
-        function fetchGoogleSheetAsJSON(sheetUrl, callback) {
+/*        function fetchGoogleSheetAsJSON(sheetUrl, callback) {
           var xhr = new XMLHttpRequest();
           xhr.open("GET", sheetUrl, true);
           xhr.onreadystatechange = function() {
@@ -244,7 +244,84 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
             }
           };
           xhr.send();
+        } */
+        
+ 
+function fetchGoogleSheetAsJSON(sheetUrl, callback) {
+    if (window.fetch) {
+      console.log("FETCH CHECK");
+        // ✅ Use fetch() if supported
+        fetch(sheetUrl, { method: 'GET', redirect: 'follow' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP Error: " + response.status);
+                }
+                return response.text();
+            })
+            .then(csvData => {
+                if (csvData.includes("Sign in to your Google Account")) {
+                    throw new Error("Google Sheet requires sign-in. Please make it public.");
+                }
+                var jsonData = tsvToJSON(csvData);
+                console.log("FETCH SUCCESS");
+                callback(jsonData);
+            })
+            .catch(error => {
+                console.error("Fetch failed:", error.message);
+                console.warn("Falling back to XMLHttpRequest...");
+                fetchWithXMLHttpRequest(sheetUrl, callback);
+            });
+    } else {
+        // 🔄 Use XMLHttpRequest if fetch() is not supported
+        fetchWithXMLHttpRequest(sheetUrl, callback);
+    }
+}
+
+// 🔄 Fallback function using XMLHttpRequest
+function fetchWithXMLHttpRequest(sheetUrl, callback) {
+                  console.log("XMLHttpRequest CHECK");
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", sheetUrl, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) { 
+            if (xhr.status === 200) {
+                var csvData = xhr.responseText;
+
+                if (csvData.includes("Sign in to your Google Account")) {
+                    console.error("Error: Google Sheet requires sign-in. Please make it public.");
+                    callback(null);
+                    return;
+                }
+
+                var jsonData = tsvToJSON(csvData);
+                console.log("XMLHttpRequest SUCCESS");
+
+                callback(jsonData);
+            } else if (xhr.status === 403) {
+                console.error("Error: Google Sheet access is restricted (403 Forbidden).");
+                callback(null);
+            } else {
+                console.error("Error: Failed to load Google Sheet. HTTP Status:", xhr.status);
+                callback(null);
+            }
         }
+    };
+
+    xhr.onerror = function() {
+        console.error("Error: CORS issue or network failure detected. Check Google Sheet permissions.");
+               // fetchLocation();
+
+        callback(null);
+    };
+
+    xhr.send();
+}
+ 
+
+
+        
+        
 
         function tsvToJSON(tsvText) {
           var lines = tsvText.split("\n"); // Split by newline
@@ -270,6 +347,8 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
 
 
         fetchGoogleSheetAsJSON(googleSheetURL, function(sheetData) {
+          //console.log("Sheet data : " +sheetData);
+          if(sheetData){
           var locationData = {};
           console.log("sheet data length: " + sheetData.length);
           for (var i = 0; i < sheetData.length; i++) {
@@ -280,15 +359,16 @@ v("gwd.texteffects.goToAndPlay",function(a,b){return Z(a,b,{play:!0})});v("gwd.t
               lon: parseFloat(row["Lon"])
             };
           }
-
-          if (locationData[vioohAssetId]) {
-            userLatitude = locationData[vioohAssetId].lat;
-            userLongitude = locationData[vioohAssetId].lon;
-            console.log(userLatitude);
-            console.log(userLongitude);
-
           }
-
+          if(vioohAssetId && sheetData ){
+            if (locationData[vioohAssetId]) {
+              userLatitude = locationData[vioohAssetId].lat;
+              userLongitude = locationData[vioohAssetId].lon;
+              console.log(userLatitude);
+              console.log(userLongitude);
+            }
+          }
+     
           fetchLocation();
         });
 
